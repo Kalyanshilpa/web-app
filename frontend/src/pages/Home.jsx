@@ -43,7 +43,7 @@ const Home = () => {
   const fetchNotes = async () => {
     try {
       const { data } = await axios.get(
-        "http://localhost:5000/api/note",
+        "https://web-app-backend-5134.onrender.com/api/note",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -69,7 +69,7 @@ const Home = () => {
   const addNote = async (title, description) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/note/add",
+        "https://web-app-backend-5134.onrender.com/api/note/add",
         { title, description },
         {
           headers: {
@@ -91,7 +91,7 @@ const Home = () => {
   const deleteNote = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/note/${id}`,
+        `https://web-app-backend-5134.onrender.com/api/note/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -111,7 +111,7 @@ const Home = () => {
   const editNote = async (id, title, description) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/note/${id}`,
+        `https://web-app-backend-5134.onrender.com/api/note/${id}`,
         { title, description },
         {
           headers: {
