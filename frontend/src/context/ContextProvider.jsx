@@ -1,50 +1,64 @@
-import React, {createContext, useContext, useState, useEffect} from "react";
-import axios from 'axios'
+import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 
-const authContext= createContext();
+const authContext = createContext();
 
-const ContextProvider = ({children}) => {
-    const [user, setUser] = useState(null)
-   
-    
-    const login = (user) =>{
-        setUser(user)
+const ContextProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const login = (userData) => {
+    setUser(userData);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setLoading(false);
+      return;
     }
 
-    const logout = () => {
-        localStorage.removeItem('token')
-        setUser(null)
-    }
-    useEffect (() => {
-        const verifyUser = async () =>{
-         try {
-            const res = await axios.get("http://localhost:5000/api/auth/verify", {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                }
-            })
-            if(res.data.success){
-                setUser(res.data.user)
-            }else{
-                setUser(null)
-            }
-         } catch(error){
-            setUser(null)
-            console.log(error.message)
-         } 
+    const verifyUser = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/api/auth/verify",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-         }
-         verifyUser()
-        }, [])
+        if (res.data.success) {
+          setUser(res.data.user);
+        } else {
+          setUser(null);
+          localStorage.removeItem("token");
+        }
+      } catch (error) {
+        setUser(null);
+        localStorage.removeItem("token");
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    verifyUser();
+  }, []);
 
-    return(
-        <authContext.Provider value={{ user, login, logout}}>
-        {children}
-        </authContext.Provider>
-    );
+  return (
+    <authContext.Provider value={{ user, login, logout, loading }}>
+      {children}
+    </authContext.Provider>
+  );
 };
 
-export const useAuth = () => useContext(authContext)
+export const useAuth = () => useContext(authContext);
 
 export default ContextProvider;
