@@ -17,7 +17,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://web-app-2yfv.vercel.app"
+      "https://web-app-front.onrender.com"
     ],
     credentials: true,
   })
