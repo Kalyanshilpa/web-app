@@ -10,22 +10,37 @@ dotenv.config();
 
 const app = express();
 
+
 app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // ✅ FRONTEND (Vite)
+    origin: [
+      "http://localhost:5173",
+      "https://web-app-2yfv.vercel.app"
+    ],
     credentials: true,
   })
 );
 
+
 app.use("/api/auth", authRouter);
 app.use("/api/note", noteRouter);
 
+
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
+
+
 const PORT = process.env.PORT || 5000;
 
-connectToMongoDB();
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+connectToMongoDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB connection failed:", err.message);
+  });
