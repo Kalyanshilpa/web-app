@@ -27,7 +27,7 @@ const ContextProvider = ({ children }) => {
     const verifyUser = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/auth/verify",
+          "https://web-app-backend-5134.onrender.com/api/auth/verify",
           {
             headers: {
               Authorization: `Bearer ${token}`,
